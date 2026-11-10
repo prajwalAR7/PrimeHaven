@@ -1,0 +1,7 @@
+$kind: collection
+name: Inquiries
+description: |-
+  Inquiry service endpoints (direct port 8084 / gateway port 8080).
+  All gateway routes require Authorization Bearer JWT.
+  Preconditions: Eureka, property service, and a valid propertyId must be available.
+  A VISIT_REQUEST inquiry also creates a visit via Feign (no distributed rollback).

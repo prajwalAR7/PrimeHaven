@@ -1,0 +1,55 @@
+$kind: http-request
+name: 'Create General Inquiry'
+order: 1000
+method: POST
+url: '{{gatewayUrl}}/api/inquiries'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Authorization
+    value: 'Bearer {{jwt}}'
+body:
+  type: json
+  content: |-
+    {
+      "propertyId": {{propertyId}},
+      "buyerUsername": "buyer_david",
+      "inquiryType": "GENERAL",
+      "message": "Could you share the maintenance details?",
+      "requestVisit": false
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 14 — Create inquiry without visit
+      pm.test("Status is 201 Created", function () {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Response has inquiry fields", function () {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("id");
+        pm.expect(json).to.have.property("propertyId");
+        pm.expect(json).to.have.property("propertyTitle");
+        pm.expect(json).to.have.property("buyerUsername");
+        pm.expect(json).to.have.property("inquiryType");
+        pm.expect(json).to.have.property("message");
+        pm.expect(json).to.have.property("status");
+        pm.expect(json).to.have.property("createdAt");
+      });
+
+      pm.test("inquiryType is GENERAL", function () {
+        pm.expect(pm.response.json().inquiryType).to.eql("GENERAL");
+      });
+
+      pm.test("visitId is null for non-visit inquiry", function () {
+        pm.expect(pm.response.json().visitId).to.be.null;
+      });
+
+      // Save inquiryId for subsequent requests
+      const id = pm.response.json().id;
+      if (id) {
+        pm.collectionVariables.set("inquiryId", String(id));
+        console.log("inquiryId saved: " + id);
+      }

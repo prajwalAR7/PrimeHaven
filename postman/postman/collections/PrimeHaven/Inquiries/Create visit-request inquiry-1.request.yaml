@@ -1,0 +1,5 @@
+$kind: http-request
+name: Create visit-request inquiry
+url: ""
+method: POST
+order: 2000

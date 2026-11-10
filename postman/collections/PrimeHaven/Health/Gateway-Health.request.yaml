@@ -1,0 +1,15 @@
+$kind: http-request
+name: 'Gateway Health'
+order: 1000
+method: GET
+url: '{{gatewayUrl}}/api/gateway/health'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200 OK", function () {
+        pm.response.to.have.status(200);
+      });
+      pm.test("Service is UP", function () {
+        pm.expect(pm.response.json().status).to.eql("UP");
+      });

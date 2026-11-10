@@ -1,0 +1,41 @@
+$kind: http-request
+description: |-
+  Retrieves a paginated list of properties available on PrimeHaven, with optional filters to narrow down results.
+
+  ## Query Parameters
+
+  | Parameter | Type | Required | Description |
+  | --- | --- | --- | --- |
+  | `city` | string | No | Filter properties by city name (e.g. `Bengaluru`). |
+  | `status` | string | No | Filter by listing status. Accepted values: `AVAILABLE`, `SOLD`, `PENDING`. |
+  | `maxPrice` | number | No | Return only properties priced at or below this value (in INR). |
+
+  ## Authentication
+
+  This endpoint requires a valid JWT bearer token. Include the token in the `Authorization` header:
+
+  ```
+  Authorization: Bearer <token>
+
+   ```
+
+  ## Response
+
+  Returns a JSON array of property objects matching the specified filters. Each object includes details such as property ID, title, location, price, status, and listing metadata.
+
+  ## Notes
+
+  - Multiple filters can be combined in a single request.
+      
+  - If no filters are provided, all properties are returned.
+      
+  - A `403 Forbidden` response indicates a missing or invalid authentication token.
+url: http://localhost:8080/api/properties?city=Bengaluru&status=AVAILABLE&maxPrice=13000000
+method: GET
+queryParams:
+  city: Bengaluru
+  status: AVAILABLE
+  maxPrice: "13000000"
+auth:
+  type: noauth
+order: 1000

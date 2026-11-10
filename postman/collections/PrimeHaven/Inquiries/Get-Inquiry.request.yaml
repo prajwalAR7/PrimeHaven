@@ -1,0 +1,25 @@
+$kind: http-request
+name: 'Get Inquiry'
+order: 4000
+method: GET
+url: '{{gatewayUrl}}/api/inquiries/{{inquiryId}}'
+headers:
+  - key: Authorization
+    value: 'Bearer {{jwt}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 16 — Get inquiry by id
+      pm.test("Status is 200 OK", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response has inquiry fields", function () {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("id");
+        pm.expect(json).to.have.property("propertyId");
+        pm.expect(json).to.have.property("buyerUsername");
+        pm.expect(json).to.have.property("inquiryType");
+        pm.expect(json).to.have.property("status");
+      });

@@ -1,0 +1,28 @@
+$kind: http-request
+name: 'Update Inquiry Status'
+order: 5000
+method: PATCH
+url: '{{gatewayUrl}}/api/inquiries/{{inquiryId}}/status'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Authorization
+    value: 'Bearer {{jwt}}'
+body:
+  type: json
+  content: |-
+    {
+      "status": "RESOLVED"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 16 — Update inquiry status
+      pm.test("Status is 200 OK", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response has status field", function () {
+        pm.expect(pm.response.json()).to.have.property("status");
+      });

@@ -1,0 +1,31 @@
+$kind: http-request
+name: 'List Properties'
+order: 2000
+method: GET
+url: '{{gatewayUrl}}/api/properties'
+queryParams:
+  - key: city
+    value: Bengaluru
+  - key: status
+    value: AVAILABLE
+  - key: maxPrice
+    value: '13000000'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 6 — List properties
+      pm.test("Status is 200 OK", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response is an array", function () {
+        pm.expect(pm.response.json()).to.be.an("array");
+      });
+
+      pm.test("All results are AVAILABLE", function () {
+        const results = pm.response.json();
+        results.forEach(function (p) {
+          pm.expect(p.status).to.eql("AVAILABLE");
+        });
+      });

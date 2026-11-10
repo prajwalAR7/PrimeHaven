@@ -1,0 +1,46 @@
+$kind: http-request
+order: 3000
+method: POST
+url: '{{gatewayUrl}}/api/auth/login'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "username": "buyer_david",
+      "password": "Password123!"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 3 — Login
+      pm.test("Status is 200 OK", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response has auth fields", function () {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("token");
+        pm.expect(json).to.have.property("tokenType");
+        pm.expect(json).to.have.property("username");
+        pm.expect(json).to.have.property("role");
+        pm.expect(json).to.have.property("expiresInMs");
+      });
+
+      pm.test("Token is non-empty string", function () {
+        pm.expect(pm.response.json().token).to.be.a("string").and.not.empty;
+      });
+
+      pm.test("ExpiresInMs is 86400000 (24 hours)", function () {
+        pm.expect(pm.response.json().expiresInMs).to.eql(86400000);
+      });
+
+      // Save token for subsequent requests
+      const token = pm.response.json().token;
+      if (token) {
+        pm.collectionVariables.set("jwt", token);
+        console.log("JWT saved from login.");
+      }

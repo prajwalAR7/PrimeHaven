@@ -1,0 +1,38 @@
+$kind: collection
+name: PRIMEHAVEN
+description: |-
+  Source-audited API collection for the PrimeHaven microservices platform.
+  Covers Auth, Property, Visit, and Inquiry services via the API Gateway.
+
+  ## Collection Variables — set these after startup
+  - gatewayUrl  = http://localhost:8080
+  - authUrl     = http://localhost:8081
+  - propertyUrl = http://localhost:8082
+  - visitUrl    = http://localhost:8083
+  - inquiryUrl  = http://localhost:8084
+  - jwt         = token returned by Register or Login
+  - propertyId  = id returned by Create Property
+  - visitId     = id returned by Schedule Visit
+  - inquiryId   = id returned by Create Inquiry
+
+  Gateway auth: every route except /api/auth/**, /actuator/**, /api/gateway/health,
+  and GET /api/properties** requires Authorization: Bearer {{jwt}}.
+variables:
+  - key: gatewayUrl
+    value: 'http://localhost:8080'
+  - key: authUrl
+    value: 'http://localhost:8081'
+  - key: propertyUrl
+    value: 'http://localhost:8082'
+  - key: visitUrl
+    value: 'http://localhost:8083'
+  - key: inquiryUrl
+    value: 'http://localhost:8084'
+  - key: jwt
+    value: ''
+  - key: propertyId
+    value: '1'
+  - key: visitId
+    value: '1'
+  - key: inquiryId
+    value: '1'

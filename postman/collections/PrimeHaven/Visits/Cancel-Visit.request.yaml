@@ -1,0 +1,23 @@
+$kind: http-request
+name: 'Cancel Visit'
+order: 5000
+method: POST
+url: '{{gatewayUrl}}/api/visits/{{visitId}}/cancel'
+headers:
+  - key: Authorization
+    value: 'Bearer {{jwt}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 13 — Cancel visit
+      pm.test("Status is 200 OK", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Visit status is CANCELLED", function () {
+        const json = pm.response.json();
+        if (json.status) {
+          pm.expect(json.status).to.eql("CANCELLED");
+        }
+      });

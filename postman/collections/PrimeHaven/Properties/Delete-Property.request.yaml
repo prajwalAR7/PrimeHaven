@@ -1,0 +1,22 @@
+$kind: http-request
+name: 'Delete Property'
+order: 6000
+method: DELETE
+url: '{{gatewayUrl}}/api/properties/{{propertyId}}'
+headers:
+  - key: Authorization
+    value: 'Bearer {{jwt}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 10 — Delete property
+      pm.test("Status is 200 OK", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response has success message", function () {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("message");
+        pm.expect(json.message).to.eql("Property deleted successfully");
+      });

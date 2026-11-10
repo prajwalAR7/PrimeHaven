@@ -1,0 +1,25 @@
+$kind: http-request
+url: http://localhost:8080/api/visits
+method: POST
+body:
+  type: json
+  content: "\r
+
+    {\r
+
+    \  \"propertyId\": 1,\r
+
+    \  \"buyerUsername\": \"buyer_david\",\r
+
+    \  \"visitDate\": \"2026-11-05\",\r
+
+    \  \"timeSlot\": \"10:00 AM - 11:00 AM\",\r
+
+    \  \"notes\": \"Please show the garden.\"\r
+
+    }\r\n"
+auth:
+  type: bearer
+  credentials:
+    token: "{{json_web_token_0fj5}}"
+order: 1000

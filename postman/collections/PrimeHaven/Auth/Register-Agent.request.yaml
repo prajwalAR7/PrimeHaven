@@ -1,0 +1,46 @@
+$kind: http-request
+name: 'Register Agent'
+order: 1000
+method: POST
+url: '{{gatewayUrl}}/api/auth/register'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "username": "agent_sarah",
+      "email": "sarah@primehaven.test",
+      "password": "Password123!",
+      "role": "ROLE_AGENT"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 1 — Register agent
+      pm.test("Status is 201 Created", function () {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Response has auth fields", function () {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("token");
+        pm.expect(json).to.have.property("tokenType");
+        pm.expect(json).to.have.property("username");
+        pm.expect(json).to.have.property("email");
+        pm.expect(json).to.have.property("role");
+        pm.expect(json).to.have.property("expiresInMs");
+      });
+
+      pm.test("Role is ROLE_AGENT", function () {
+        pm.expect(pm.response.json().role).to.eql("ROLE_AGENT");
+      });
+
+      // Save token for subsequent requests
+      const token = pm.response.json().token;
+      if (token) {
+        pm.collectionVariables.set("jwt", token);
+        console.log("JWT saved from agent registration.");
+      }

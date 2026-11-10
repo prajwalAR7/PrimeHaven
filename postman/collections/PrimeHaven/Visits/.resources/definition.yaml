@@ -1,0 +1,3 @@
+$kind: collection
+name: Visits
+description: 'Visit service endpoints (direct port 8083 / gateway port 8080). All gateway routes require Authorization Bearer JWT.'

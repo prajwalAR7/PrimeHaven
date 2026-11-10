@@ -1,0 +1,27 @@
+{
+  "info": {"name": "PrimeHaven — source-audited endpoints", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"},
+  "variable": [
+    {"key":"gatewayUrl","value":"http://localhost:8080"}, {"key":"jwt","value":""}, {"key":"propertyId","value":"1"}, {"key":"visitId","value":"1"}, {"key":"inquiryId","value":"1"}
+  ],
+  "item": [
+    {"name":"Auth", "item":[
+      {"name":"Register buyer", "request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"username\": \"buyer_david\",\n  \"email\": \"buyer.david@primehaven.test\",\n  \"password\": \"Password123!\",\n  \"role\": \"ROLE_BUYER\"\n}"},"url":"{{gatewayUrl}}/api/auth/register"}},
+      {"name":"Login", "request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"username\": \"buyer_david\",\n  \"password\": \"Password123!\"\n}"},"url":"{{gatewayUrl}}/api/auth/login"}},
+      {"name":"Validate token", "request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":"{{gatewayUrl}}/api/auth/validate"}}
+    ]},
+    {"name":"Properties", "item":[
+      {"name":"Create property", "request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{jwt}}"}],"body":{"mode":"raw","raw":"{\n  \"title\": \"Palm Grove Villa\",\n  \"description\": \"Four-bedroom villa with a pool\",\n  \"address\": \"42 Palm Grove Road\",\n  \"city\": \"Bengaluru\",\n  \"price\": 12500000.00,\n  \"propertyType\": \"VILLA\",\n  \"status\": \"AVAILABLE\",\n  \"bedrooms\": 4,\n  \"bathrooms\": 3,\n  \"agentUsername\": \"agent_sarah\"\n}"},"url":"{{gatewayUrl}}/api/properties"}},
+      {"name":"List properties", "request":{"method":"GET","url":"{{gatewayUrl}}/api/properties?city=Bengaluru&status=AVAILABLE&maxPrice=13000000"}},
+      {"name":"Availability", "request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":"{{gatewayUrl}}/api/properties/{{propertyId}}/availability"}}
+    ]},
+    {"name":"Visits", "item":[
+      {"name":"Schedule visit", "request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{jwt}}"}],"body":{"mode":"raw","raw":"{\n  \"propertyId\": {{propertyId}},\n  \"buyerUsername\": \"buyer_david\",\n  \"visitDate\": \"2026-10-05\",\n  \"timeSlot\": \"10:00 AM - 11:00 AM\",\n  \"notes\": \"Please show the garden.\"\n}"},"url":"{{gatewayUrl}}/api/visits"}},
+      {"name":"Query visits", "request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":"{{gatewayUrl}}/api/visits?buyerUsername=buyer_david&propertyId={{propertyId}}"}},
+      {"name":"Cancel visit", "request":{"method":"POST","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":"{{gatewayUrl}}/api/visits/{{visitId}}/cancel"}}
+    ]},
+    {"name":"Inquiries", "item":[
+      {"name":"Create visit-request inquiry", "request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"},{"key":"Authorization","value":"Bearer {{jwt}}"}],"body":{"mode":"raw","raw":"{\n  \"propertyId\": {{propertyId}},\n  \"buyerUsername\": \"buyer_david\",\n  \"inquiryType\": \"VISIT_REQUEST\",\n  \"message\": \"I want to inspect this villa.\",\n  \"requestVisit\": true,\n  \"visitDate\": \"2026-10-05\",\n  \"timeSlot\": \"10:00 AM - 11:00 AM\",\n  \"visitNotes\": \"Please cover parking details.\"\n}"},"url":"{{gatewayUrl}}/api/inquiries"}},
+      {"name":"Query inquiries", "request":{"method":"GET","header":[{"key":"Authorization","value":"Bearer {{jwt}}"}],"url":"{{gatewayUrl}}/api/inquiries?buyerUsername=buyer_david&propertyId={{propertyId}}"}}
+    ]}
+  ]
+}

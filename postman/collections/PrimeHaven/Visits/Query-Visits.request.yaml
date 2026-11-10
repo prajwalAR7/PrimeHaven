@@ -1,0 +1,25 @@
+$kind: http-request
+name: 'Query Visits'
+order: 2000
+method: GET
+url: '{{gatewayUrl}}/api/visits'
+queryParams:
+  - key: buyerUsername
+    value: buyer_david
+  - key: propertyId
+    value: '{{propertyId}}'
+headers:
+  - key: Authorization
+    value: 'Bearer {{jwt}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 12 — Query visits
+      pm.test("Status is 200 OK", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response is an array", function () {
+        pm.expect(pm.response.json()).to.be.an("array");
+      });

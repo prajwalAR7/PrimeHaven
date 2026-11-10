@@ -1,0 +1,24 @@
+$kind: http-request
+name: 'Get Visit'
+order: 3000
+method: GET
+url: '{{gatewayUrl}}/api/visits/{{visitId}}'
+headers:
+  - key: Authorization
+    value: 'Bearer {{jwt}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 13 — Get visit
+      pm.test("Status is 200 OK", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response has visit fields", function () {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("id");
+        pm.expect(json).to.have.property("propertyId");
+        pm.expect(json).to.have.property("buyerUsername");
+        pm.expect(json).to.have.property("status");
+      });

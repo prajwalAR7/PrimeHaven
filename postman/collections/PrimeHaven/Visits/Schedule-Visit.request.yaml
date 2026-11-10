@@ -1,0 +1,55 @@
+$kind: http-request
+name: 'Schedule Visit'
+order: 1000
+method: POST
+url: '{{gatewayUrl}}/api/visits'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Authorization
+    value: 'Bearer {{jwt}}'
+body:
+  type: json
+  content: |-
+    {
+      "propertyId": {{propertyId}},
+      "buyerUsername": "buyer_david",
+      "visitDate": "2026-10-05",
+      "timeSlot": "10:00 AM - 11:00 AM",
+      "notes": "Please show the garden."
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 11 — Schedule visit
+      pm.test("Status is 201 Created", function () {
+        pm.response.to.have.status(201);
+      });
+
+      pm.test("Response has visit fields", function () {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("id");
+        pm.expect(json).to.have.property("propertyId");
+        pm.expect(json).to.have.property("buyerUsername");
+        pm.expect(json).to.have.property("visitDate");
+        pm.expect(json).to.have.property("timeSlot");
+        pm.expect(json).to.have.property("status");
+        pm.expect(json).to.have.property("notes");
+        pm.expect(json).to.have.property("createdAt");
+      });
+
+      pm.test("Status is SCHEDULED", function () {
+        pm.expect(pm.response.json().status).to.eql("SCHEDULED");
+      });
+
+      pm.test("buyerUsername matches", function () {
+        pm.expect(pm.response.json().buyerUsername).to.eql("buyer_david");
+      });
+
+      // Save visitId for subsequent requests
+      const id = pm.response.json().id;
+      if (id) {
+        pm.collectionVariables.set("visitId", String(id));
+        console.log("visitId saved: " + id);
+      }

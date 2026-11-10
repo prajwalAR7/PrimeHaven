@@ -1,0 +1,19 @@
+$kind: http-request
+url: http://localhost:8081/api/auth/register
+method: POST
+body:
+  type: json
+  content: "\r
+
+    {\r
+
+    \  \"username\": \"LALITH S\",\r
+
+    \  \"email\": \"buyer.LALITHS@primehaven.test\",\r
+
+    \  \"password\": \"Password123!\",\r
+
+    \  \"role\": \"ROLE_BUYER\"\r
+
+    }\r\n"
+order: 1000

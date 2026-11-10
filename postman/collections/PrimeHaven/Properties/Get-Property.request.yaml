@@ -1,0 +1,28 @@
+$kind: http-request
+name: 'Get Property'
+order: 3000
+method: GET
+url: '{{gatewayUrl}}/api/properties/{{propertyId}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 7 — Get property
+      pm.test("Status is 200 OK", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response has property fields", function () {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("id");
+        pm.expect(json).to.have.property("title");
+        pm.expect(json).to.have.property("city");
+        pm.expect(json).to.have.property("price");
+        pm.expect(json).to.have.property("propertyType");
+        pm.expect(json).to.have.property("status");
+      });
+
+      pm.test("ID matches collection variable", function () {
+        const expectedId = parseInt(pm.collectionVariables.get("propertyId"));
+        pm.expect(pm.response.json().id).to.eql(expectedId);
+      });

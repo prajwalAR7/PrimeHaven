@@ -1,0 +1,40 @@
+$kind: http-request
+name: 'Update Property'
+order: 4000
+method: PUT
+url: '{{gatewayUrl}}/api/properties/{{propertyId}}'
+headers:
+  - key: Content-Type
+    value: application/json
+  - key: Authorization
+    value: 'Bearer {{jwt}}'
+body:
+  type: json
+  content: |-
+    {
+      "title": "Palm Grove Villa",
+      "description": "Four-bedroom villa with a pool — updated",
+      "address": "42 Palm Grove Road",
+      "city": "Bengaluru",
+      "price": 12500000.00,
+      "propertyType": "VILLA",
+      "status": "AVAILABLE",
+      "bedrooms": 4,
+      "bathrooms": 3,
+      "agentUsername": "agent_sarah"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      // API TEST 8 — Update property
+      pm.test("Status is 200 OK", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Response has property fields", function () {
+        const json = pm.response.json();
+        pm.expect(json).to.have.property("id");
+        pm.expect(json).to.have.property("title");
+        pm.expect(json).to.have.property("updatedAt");
+      });
